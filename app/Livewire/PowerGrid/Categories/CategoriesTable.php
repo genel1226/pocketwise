@@ -3,7 +3,6 @@
 namespace App\Livewire\PowerGrid\Categories;
 
 use App\Models\PocketWise\Categories;
-use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Column;
@@ -18,7 +17,7 @@ final class CategoriesTable extends PowerGridComponent
 
     public function setUp(): array
     {
-        $this->showCheckBox();
+        // $this->showCheckBox();
 
         return [
             PowerGrid::header()
@@ -31,7 +30,7 @@ final class CategoriesTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return Categories::query();
+        return Categories::query()->orderBy('id','desc');
     }
 
     public function relationSearch(): array
@@ -82,12 +81,12 @@ final class CategoriesTable extends PowerGridComponent
                 ->sortable()
                 ->searchable(),
 
-            Column::make('Created at', 'created_at_formatted', 'created_at')
-                ->sortable(),
+            // Column::make('Created at', 'created_at_formatted', 'created_at')
+            //     ->sortable(),
 
-            Column::make('Created at', 'created_at')
-                ->sortable()
-                ->searchable(),
+            // Column::make('Created at', 'created_at')
+            //     ->sortable()
+            //     ->searchable(),
 
             Column::action('Action')
         ];
