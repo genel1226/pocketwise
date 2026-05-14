@@ -29,7 +29,7 @@ class TransactionsFactory extends Factory
             'category_id' => fake()->randomElement($categoriesIds),
             'envelope_id' => fake()->randomElement($envelopesIds),
             'amount' => fake()->randomFloat(2, 1, 10000),
-            'type' => fake()->randomElement(['icome', 'expense']),
+            'type' => fake()->randomElement(['income', 'expense']),
             'description' => fake()->text(),
             'date' => fake()->dateTimeBetween('-4 months', 'now'),
             'tags' => [

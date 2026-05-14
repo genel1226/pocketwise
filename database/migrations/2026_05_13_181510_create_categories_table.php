@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained();
             $table->string('name');
-            $table->string('type')->enum(['need', 'want', 'savings']); // para 50/30/20
+            $table->enum('type',['need', 'want', 'savings']); // para 50/30/20
             $table->boolean('is_fixed')->default(false);
             $table->decimal('monthly_budget', 10, 2)->nullable();
             $table->string('icon')->nullable();

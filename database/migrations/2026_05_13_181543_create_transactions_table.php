@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('category_id')->constrained();
             $table->foreignId('envelope_id')->nullable()->constrained();
             $table->decimal('amount', 10, 2);
-            $table->enum('type',['income', 'expense'])->default('null');
+            $table->enum('type',['income', 'expense']);
             $table->string('description');
             $table->date('date');
             $table->json('tags')->nullable();

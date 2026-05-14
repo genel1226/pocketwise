@@ -23,7 +23,7 @@ class CategoriesFactory extends Factory
         return [
             'user_id' => fake()->randomElement($userIds),
             'name' => fake()->unique()->word(),
-            'type' => fake()->randomElement(['income', 'expense', 'saving']),
+            'type' => fake()->randomElement(['need', 'want', 'savings']),
             'is_fixed' => fake()->boolean(30), // 30% de probabilidad de ser true
             'monthly_budget' => fake()->randomFloat(2, 0, 10000),
             'icon' => fake()->randomElement(['💰', '🏠', '🚗', '🍔', '🎮', '📚', '💊', '🎓', '✈️', '👕']),
