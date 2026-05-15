@@ -27,7 +27,7 @@ class Index extends Component
 
         $this->form->save();
 
-        $this->redirectRoute('categories.index');
+        $this->dispatch('pg:eventRefresh-categoriesTable'); // para refrescar la tabla y que no se refresque por completo la pagina
     }
 
     #[On('edit')]
@@ -42,7 +42,7 @@ class Index extends Component
     {
         $this->form->update();
 
-        $this->redirectRoute('categories.index');
+        $this->dispatch('pg:eventRefresh-categoriesTable');
     }
 
     #[On('destroy')]
@@ -50,7 +50,7 @@ class Index extends Component
     {
         $this->form->destroy($id);
 
-        $this->redirectRoute('categories.index');
+        $this->dispatch('pg:eventRefresh-categoriesTable');
     }
 
     public function exit()
