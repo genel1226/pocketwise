@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\PowerGrid\Categories;
+namespace App\Livewire\PocketWise\Categories;
 
 use App\Models\PocketWise\Categories;
 use Illuminate\Database\Eloquent\Builder;
@@ -98,11 +98,7 @@ final class CategoriesTable extends PowerGridComponent
         ];
     }
 
-    #[\Livewire\Attributes\On('edit')]
-    public function edit($rowId): void
-    {
-        $this->js('alert('.$rowId.')');
-    }
+    
 
     public function actions(Categories $row): array
     {
@@ -111,7 +107,7 @@ final class CategoriesTable extends PowerGridComponent
                 ->slot('Edit: '.$row->id)
                 ->id()
                 ->class('pg-btn-white dark:ring-pg-primary-600 dark:border-pg-primary-600 dark:hover:bg-pg-primary-700 dark:ring-offset-pg-primary-800 dark:text-pg-primary-300 dark:bg-pg-primary-700')
-                ->dispatch('edit', ['rowId' => $row->id])
+                ->dispatch('edit', ['id' => $row->id])
         ];
     }
 

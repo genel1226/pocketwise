@@ -11,7 +11,7 @@
         </div>
         {{-- Modal --}}
         <div class="order-last px-2">
-            <flux:modal.trigger name="create-categories">
+            <flux:modal.trigger wire:click="open" >
                 <flux:button>
                     <flux:icon name="plus" />Categoría
                 </flux:button>
@@ -20,7 +20,7 @@
             <flux:modal name="create-categories" class="w-full !max-w-xl" :dismissible="false">
                 <div class="space-y-6">
                     <div>
-                        <flux:heading size="lg" class="">Agregar Categoría</flux:heading>
+                        <flux:heading size="lg" class="">{{ $state === 'create' ? 'Agregar Categoría' : 'Editar Categoría' }}</flux:heading>
                     </div>
 
                     <flux:separator />
@@ -70,7 +70,7 @@
                         <div class="gap-4">
                             <flux:button wire:click="exit" variant="ghost">Cancel
                             </flux:button>
-                            <flux:button wire:click="save" type="submit" variant="primary">Save changes</flux:button>
+                            <flux:button wire:click="{{ $state === 'create' ? 'save' : 'update' }}" type="submit" variant="primary">{{ $state === 'create' ? 'Crear' : 'Modificar' }}</flux:button>
                         </div>
                     </div>
                 </div>
@@ -80,6 +80,6 @@
 
     {{-- Tabla con PowerGrid --}}
     <div class="py-4">
-        <livewire:power-grid.categories.categories-table />
+        <livewire:pocket-wise.categories.categories-table />
     </div>
 </div>
