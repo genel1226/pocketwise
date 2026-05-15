@@ -4,12 +4,14 @@ namespace App\Livewire\PocketWise\Categories;
 
 use App\Models\PocketWise\Categories;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Blade;
 use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Facades\Filter;
 use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
 use PowerComponents\LivewirePowerGrid\PowerGridFields;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
+use Closure;
 
 final class CategoriesTable extends PowerGridComponent
 {
@@ -30,7 +32,26 @@ final class CategoriesTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return Categories::query()->orderBy('id','desc');
+        return Categories::with('user')
+            ->selectRaw("
+                categories.*,
+                CASE type
+                    WHEN 'want' THEN 'Deseo'
+                    WHEN 'need' THEN 'Necesidad'
+                    WHEN 'savings' THEN 'Ahorro'
+                    ELSE type
+                END as type_label
+            ")
+            ->selectRaw("
+                categories.*,
+                CASE is_fixed
+                    WHEN 0 THEN 'Variable'
+                    WHEN 1 THEN 'Fijo'
+                END as is_fixed_label
+            ")
+            ->join('users', 'users.id', '=', 'categories.user_id')
+            ->selectRaw('categories.*, users.name as user_name')
+            ->orderBy('id','desc');
     }
 
     public function relationSearch(): array
@@ -48,7 +69,14 @@ final class CategoriesTable extends PowerGridComponent
             ->add('is_fixed')
             ->add('monthly_budget')
             ->add('icon')
-            ->add('color')
+            ->add('color_preview', function ($category) {
+                return '
+                    <div 
+                        class="w-6 h-6 rounded-full border mx-auto"
+                        style="background-color: '.$category->color.'"
+                    ></div>
+                ';
+            })
             ->add('created_at');
     }
 
@@ -56,16 +84,16 @@ final class CategoriesTable extends PowerGridComponent
     {
         return [
             Column::make('Id', 'id'),
-            Column::make('User id', 'user_id'),
+            Column::make('User id', 'user_name'),
             Column::make('Name', 'name')
                 ->sortable()
                 ->searchable(),
 
-            Column::make('Type', 'type')
+            Column::make('Type', 'type_label')
                 ->sortable()
                 ->searchable(),
 
-            Column::make('Is fixed', 'is_fixed')
+            Column::make('Is fixed', 'is_fixed_label')
                 ->sortable()
                 ->searchable(),
 
@@ -77,9 +105,7 @@ final class CategoriesTable extends PowerGridComponent
                 ->sortable()
                 ->searchable(),
 
-            Column::make('Color', 'color')
-                ->sortable()
-                ->searchable(),
+            Column::make('Color', 'color_preview'),
 
             // Column::make('Created at', 'created_at_formatted', 'created_at')
             //     ->sortable(),
@@ -98,16 +124,20 @@ final class CategoriesTable extends PowerGridComponent
         ];
     }
 
-    
-
     public function actions(Categories $row): array
     {
         return [
             Button::add('edit')
-                ->slot('Edit: '.$row->id)
-                ->id()
+                ->slot(Blade::render('<x-heroicon-s-pencil-square class="w-3 h-3" />'))
                 ->class('pg-btn-white dark:ring-pg-primary-600 dark:border-pg-primary-600 dark:hover:bg-pg-primary-700 dark:ring-offset-pg-primary-800 dark:text-pg-primary-300 dark:bg-pg-primary-700')
                 ->dispatch('edit', ['id' => $row->id])
+                ->tooltip('Editar'),
+            Button::add('destroy')
+                ->slot(Blade::render('<x-heroicon-s-trash class="w-3 h-3" />'))
+                ->class('pg-btn-white dark:ring-pg-primary-600 dark:border-pg-primary-600 dark:hover:bg-pg-primary-700 dark:ring-offset-pg-primary-800 dark:text-pg-primary-300 dark:bg-pg-primary-700')
+                ->dispatch('destroy', ['id' => $row->id])
+                ->tooltip('Eliminar')
+                ->confirm('Está seguro de elimiar esta Categoría?'),
         ];
     }
 

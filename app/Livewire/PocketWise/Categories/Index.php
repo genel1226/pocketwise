@@ -45,6 +45,14 @@ class Index extends Component
         $this->redirectRoute('categories.index');
     }
 
+    #[On('destroy')]
+    public function destroy($id)
+    {
+        $this->form->destroy($id);
+
+        $this->redirectRoute('categories.index');
+    }
+
     public function exit()
     {
         $this->state = 'create';

@@ -28,7 +28,7 @@ class CategoryForm extends Form
 
     public $icon = null;
 
-    public $color;
+    public $color = '#000000';
 
     public function save()
     {
@@ -93,6 +93,11 @@ class CategoryForm extends Form
         ]);
 
         Flux::modal('create-categories')->close();
+    }
+
+    public function destroy($id)
+    {
+        Categories::findOrFail($id)->delete();
     }
 
     public function exit()

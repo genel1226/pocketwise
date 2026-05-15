@@ -21,19 +21,19 @@ return [
 
     'cache_ttl' => null,
 
-    'icon_resources' => [
-        'paths' => [
-            // 'default' => 'resources/views/components/icons',
-            // 'outline' => 'vendor/wireui/wireui/resources/views/components/icons/outline',
-            // 'solid'   => 'vendor/wireui/wireui/resources/views/components/icons/solid',
-        ],
+    // 'icon_resources' => [
+    //     'paths' => [
+    //         // 'default' => 'resources/views/components/icons',
+    //         // 'outline' => 'vendor/wireui/wireui/resources/views/components/icons/outline',
+    //         // 'solid'   => 'vendor/wireui/wireui/resources/views/components/icons/solid',
+    //     ],
 
-        'allowed' => [
-            // 'pencil',
-        ],
+    //     'allowed' => [
+    //         // 'pencil',
+    //     ],
 
-        'attributes' => ['class' => 'w-5 text-red-600'],
-    ],
+    //     'attributes' => ['class' => 'w-5 text-red-600'],
+    // ],
 
     /*
     |--------------------------------------------------------------------------
