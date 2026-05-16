@@ -105,4 +105,9 @@ class CategoryForm extends Form
         $this->reset(['name', 'type', 'is_fixed', 'fixed', 'monthly_budget', 'icon', 'color']);
         Flux::modal('create-categories')->close();
     }
+
+    public function refresh()
+    {
+        $this->reset(['name', 'type', 'is_fixed', 'fixed', 'monthly_budget', 'icon', 'color']);
+    }
 }

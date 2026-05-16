@@ -18,6 +18,8 @@ class Index extends Component
     {
         $this->state = 'create';
 
+        $this->form->refresh();
+
         Flux::modal('create-categories')->show();
     }
 
