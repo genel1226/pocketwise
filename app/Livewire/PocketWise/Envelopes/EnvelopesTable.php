@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Livewire\PocketWise\Categories;
+namespace App\Livewire\PocketWise\Envelopes;
 
-use App\Models\PocketWise\Categories;
+use App\Models\PocketWise\Envelopes;
+use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Blade;
 use PowerComponents\LivewirePowerGrid\Button;
@@ -11,16 +12,13 @@ use PowerComponents\LivewirePowerGrid\Facades\Filter;
 use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
 use PowerComponents\LivewirePowerGrid\PowerGridFields;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
-use Closure;
 
-final class CategoriesTable extends PowerGridComponent
+final class EnvelopesTable extends PowerGridComponent
 {
-    public string $tableName = 'categoriesTable';
+    public string $tableName = 'envelopesTable';
 
     public function setUp(): array
     {
-        // $this->showCheckBox();
-
         return [
             PowerGrid::header()
                 ->showSearchInput(),
@@ -32,25 +30,11 @@ final class CategoriesTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return Categories::with('user')
-            ->selectRaw("
-                categories.*,
-                CASE type
-                    WHEN 'want' THEN 'Deseo'
-                    WHEN 'need' THEN 'Necesidad'
-                    WHEN 'savings' THEN 'Ahorro'
-                    ELSE type
-                END as type_label
-            ")
-            ->selectRaw("
-                categories.*,
-                CASE is_fixed
-                    WHEN 0 THEN 'Variable'
-                    WHEN 1 THEN 'Fijo'
-                END as is_fixed_label
-            ")
-            ->join('users', 'users.id', '=', 'categories.user_id')
-            ->selectRaw('categories.*, users.name as user_name')
+        return Envelopes::with('user','category')
+            ->join('users', 'users.id', '=', 'envelopes.user_id')
+            ->join('categories', 'categories.id', '=', 'envelopes.category_id')
+            ->selectRaw('envelopes.*, users.name as user_name')
+            ->selectRaw('envelopes.*, categories.name as category_name')
             ->orderBy('id','desc');
     }
 
@@ -64,19 +48,10 @@ final class CategoriesTable extends PowerGridComponent
         return PowerGrid::fields()
             ->add('id')
             ->add('user_id')
-            ->add('name')
-            ->add('type')
-            ->add('is_fixed')
-            ->add('monthly_budget')
-            ->add('icon')
-            ->add('color_preview', function ($category) {
-                return '
-                    <div 
-                        class="w-6 h-6 rounded-full border mx-auto"
-                        style="background-color: '.$category->color.'"
-                    ></div>
-                ';
-            })
+            ->add('category_id')
+            ->add('allocated_amount')
+            ->add('spent_amount')
+            ->add('month_year')
             ->add('updated_at')
             ->add('created_at');
     }
@@ -85,35 +60,26 @@ final class CategoriesTable extends PowerGridComponent
     {
         return [
             Column::make('Id', 'id'),
-            Column::make('User id', 'user_name'),
-            Column::make('Name', 'name')
+            Column::make('Usuario', 'user_name'),
+            Column::make('Categoría', 'category_name'),
+            Column::make('Presupuesto', 'allocated_amount')
                 ->sortable()
                 ->searchable(),
 
-            Column::make('Type', 'type_label')
+            Column::make('Gastado', 'spent_amount')
                 ->sortable()
                 ->searchable(),
 
-            Column::make('Is fixed', 'is_fixed_label')
+            Column::make('Año - Mes', 'month_year')
                 ->sortable()
                 ->searchable(),
 
-            Column::make('Monthly budget', 'monthly_budget')
-                ->sortable()
-                ->searchable(),
-
-            Column::make('Icon', 'icon')
-                ->sortable()
-                ->searchable(),
-
-            Column::make('Color', 'color_preview'),
-
-            // Column::make('Uptated at', 'updated_at')
+            // Column::make('Ultima Actualización', 'updated_at')
             //     ->sortable(),
 
-            // Column::make('Created at', 'created_at')
-            //     ->sortable()
-            //     ->searchable(),
+            Column::make('Fecha y Hora', 'created_at')
+                ->sortable()
+                ->searchable(),
 
             Column::action('Action')
         ];
@@ -125,27 +91,30 @@ final class CategoriesTable extends PowerGridComponent
         ];
     }
 
-    public function actions(Categories $row): array
+    #[\Livewire\Attributes\On('edit')]
+    public function edit($rowId): void
+    {
+        $this->js('alert('.$rowId.')');
+    }
+
+    public function actions(Envelopes $row): array
     {
         return [
             Button::add('edit')
                 ->slot(Blade::render('<x-heroicon-s-pencil-square class="w-3 h-3" />'))
                 ->class('pg-btn-white dark:ring-pg-primary-600 dark:border-pg-primary-600 dark:hover:bg-pg-primary-700 dark:ring-offset-pg-primary-800 dark:text-pg-primary-300 dark:bg-pg-primary-700')
-                ->dispatch('edit', ['id' => $row->id])
-                ->tooltip('Editar'),
+                ->dispatch('edit', ['rowId' => $row->id]),
             Button::add('destroy')
                 ->slot(Blade::render('<x-heroicon-s-trash class="w-3 h-3" />'))
                 ->class('pg-btn-white dark:ring-pg-primary-600 dark:border-pg-primary-600 dark:hover:bg-pg-primary-700 dark:ring-offset-pg-primary-800 dark:text-pg-primary-300 dark:bg-pg-primary-700')
-                ->dispatch('destroy', ['id' => $row->id])
-                ->tooltip('Eliminar')
-                ->confirm('Está seguro de elimiar esta Categoría?'),
+                ->dispatch('edit', ['rowId' => $row->id])
         ];
     }
 
     /*
     public function actionRules($row): array
     {
-        return [
+       return [
             // Hide button edit for ID 1
             Rule::button('edit')
                 ->when(fn($row) => $row->id === 1)

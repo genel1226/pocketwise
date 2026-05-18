@@ -19,6 +19,9 @@
                     <flux:sidebar.item icon="tag" :href="route('categories.index')" :current="request()->routeIs('categories.*')" wire:navigate>
                         Categorias
                     </flux:sidebar.item>
+                    <flux:sidebar.item icon="envelope" :href="route('envelopes.index')" :current="request()->routeIs('envelopes.*')" wire:navigate>
+                        Sobres
+                    </flux:sidebar.item>
                 </flux:sidebar.group>
             </flux:sidebar.nav>
 
