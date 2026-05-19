@@ -60,42 +60,42 @@ final class TransactionsTable extends PowerGridComponent
     {
         return [
             Column::make('Id', 'id'),
-            Column::make('User id', 'user_id'),
-            Column::make('Category id', 'category_id'),
-            Column::make('Envelope id', 'envelope_id'),
-            Column::make('Amount', 'amount')
+            Column::make('Usuario', 'user_id'),
+            Column::make('Categoría', 'category_id'),
+            Column::make('Sobre', 'envelope_id'),
+            Column::make('Monto', 'amount')
                 ->sortable()
                 ->searchable(),
 
-            Column::make('Type', 'type')
+            Column::make('Tipo', 'type')
                 ->sortable()
                 ->searchable(),
 
-            Column::make('Description', 'description')
+            Column::make('Descripción', 'description')
                 ->sortable()
                 ->searchable(),
 
-            Column::make('Date', 'date_formatted', 'date')
+            Column::make('Fecha', 'date_formatted', 'date')
                 ->sortable(),
 
             Column::make('Tags', 'tags')
                 ->sortable()
                 ->searchable(),
 
-            Column::make('Receipt path', 'receipt_path')
+            Column::make('Recibo', 'receipt_path')
                 ->sortable()
                 ->searchable(),
 
-            Column::make('Is recurring', 'is_recurring')
+            Column::make('Recurrente', 'is_recurring')
                 ->sortable()
                 ->searchable(),
 
-            Column::make('Created at', 'created_at_formatted', 'created_at')
-                ->sortable(),
+            // Column::make('Created at', 'created_at_formatted', 'created_at')
+            //     ->sortable(),
 
-            Column::make('Created at', 'created_at')
-                ->sortable()
-                ->searchable(),
+            // Column::make('Created at', 'created_at')
+            //     ->sortable()
+            //     ->searchable(),
 
             Column::action('Action')
         ];
