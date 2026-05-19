@@ -91,11 +91,11 @@ final class EnvelopesTable extends PowerGridComponent
         ];
     }
 
-    #[\Livewire\Attributes\On('edit')]
-    public function edit($rowId): void
-    {
-        $this->js('alert('.$rowId.')');
-    }
+    // #[\Livewire\Attributes\On('edit')]
+    // public function edit($rowId): void
+    // {
+    //     $this->js('alert('.$rowId.')');
+    // }
 
     public function actions(Envelopes $row): array
     {
@@ -103,11 +103,14 @@ final class EnvelopesTable extends PowerGridComponent
             Button::add('edit')
                 ->slot(Blade::render('<x-heroicon-s-pencil-square class="w-3 h-3" />'))
                 ->class('pg-btn-white dark:ring-pg-primary-600 dark:border-pg-primary-600 dark:hover:bg-pg-primary-700 dark:ring-offset-pg-primary-800 dark:text-pg-primary-300 dark:bg-pg-primary-700')
-                ->dispatch('edit', ['rowId' => $row->id]),
+                ->dispatch('edit', ['id' => $row->id])
+                ->tooltip('Editar'),
             Button::add('destroy')
                 ->slot(Blade::render('<x-heroicon-s-trash class="w-3 h-3" />'))
                 ->class('pg-btn-white dark:ring-pg-primary-600 dark:border-pg-primary-600 dark:hover:bg-pg-primary-700 dark:ring-offset-pg-primary-800 dark:text-pg-primary-300 dark:bg-pg-primary-700')
-                ->dispatch('edit', ['rowId' => $row->id])
+                ->dispatch('destroy', ['id' => $row->id])
+                ->tooltip('Eliminar')
+                ->confirm('Está seguro de eliminar este Sobre?')
         ];
     }
 

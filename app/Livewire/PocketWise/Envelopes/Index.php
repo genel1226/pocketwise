@@ -4,6 +4,7 @@ namespace App\Livewire\PocketWise\Envelopes;
 
 use App\Livewire\Forms\EnvelopesForm;
 use App\Models\PocketWise\Categories;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class Index extends Component
@@ -33,6 +34,29 @@ class Index extends Component
         $this->form->updatedCategoryId($value);
     }
 
+    #[On('edit')]
+    public function edit($id)
+    {
+        $this->state = 'update';
+
+        $this->form->edit($id);
+    }
+
+    public function update()
+    {
+        $this->form->update();
+
+        $this->dispatch('pg:eventRefresh-envelopesTable');
+    }
+
+    #[On('destroy')]
+    public function destroy($id)
+    {
+        $this->form->destroy($id);
+
+        $this->dispatch('pg:eventRefresh-envelopesTable');
+    }
+
     public function exit()
     {
         $this->form->exit();
@@ -40,6 +64,6 @@ class Index extends Component
 
     public function render()
     {
-        return view('livewire.pocket-wise.envelopes.index', ['categories' => Categories::pluck('name', 'id')]);
+        return view('livewire.pocket-wise.envelopes.index', ['categories' => Categories::orderBy('name','asc')->pluck('name', 'id')]);
     }
 }

@@ -33,7 +33,7 @@
 
                         <div class="grid grid-cols-2 gap-4">
 
-                            <flux:select label="Categoría" wire:model.live="category_id" >
+                            <flux:select label="Categoría" wire:model.live="form.category_id" >
 
                                 <flux:select.option value="">
                                     Seleccione Categoría
@@ -49,11 +49,14 @@
 
                             <flux:input wire:model="form.allocated_amount" label="Presupuesto" placeholder="Ingrese Presupuesto"
                                 disabled />
+                                
+                            <flux:input wire:model="form.spent_amount" type="number" label="Gasto" placeholder="Ingrese Monto Gastado"
+                            :error="$errors->first('spent_amount')" />
 
+                            <flux:input wire:model="form.month_year" label="Año - Mes" placeholder="Ej: 2026-01"
+                            :error="$errors->first('month_year')" />
                         </div>
 
-                        <flux:input wire:model="form.spent_amount" type="number" label="Gasto" placeholder="Ingrese Monto Gastado"
-                            :error="$errors->first('spent_amount')" />
 
                         <div class="flex">
 
