@@ -22,6 +22,9 @@
                     <flux:sidebar.item icon="envelope" :href="route('envelopes.index')" :current="request()->routeIs('envelopes.*')" wire:navigate>
                         Sobres
                     </flux:sidebar.item>
+                    <flux:sidebar.item icon="banknotes" :href="route('transactions.index')" :current="request()->routeIs('transactions.*')" wire:navigate>
+                        Transacciones
+                    </flux:sidebar.item>
                 </flux:sidebar.group>
             </flux:sidebar.nav>
 
