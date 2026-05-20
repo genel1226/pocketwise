@@ -50,7 +50,7 @@
                             <flux:input wire:model="form.allocated_amount" label="Presupuesto" placeholder="Ingrese Presupuesto"
                                 disabled />
                                 
-                            <flux:input wire:model="form.spent_amount" type="number" label="Gasto" placeholder="Ingrese Monto Gastado"
+                            <flux:input wire:model="form.spent_amount" type="number" label="Gasto" disabled placeholder="Ingrese Monto Gastado"
                             :error="$errors->first('spent_amount')" />
 
                             <flux:input wire:model="form.month_year" label="Año - Mes" placeholder="Ej: 2026-01"
