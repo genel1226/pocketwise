@@ -35,9 +35,9 @@ class CategoryForm extends Form
         $this->validate();
 
         if ($this->is_fixed) {
-            $fixed = 1;
+            $this->fixed = 1;
         } else {
-            $fixed = 0;
+            $this->fixed = 0;
         }
 
         Categories::create([

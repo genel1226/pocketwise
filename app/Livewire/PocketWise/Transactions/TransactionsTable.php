@@ -32,7 +32,16 @@ final class TransactionsTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return Transactions::query();
+        // return Transactions::query()->orderBy('id', 'desc');
+        return Transactions::with('user', 'category', 'envelope')
+            ->join('users', 'users.id', '=', 'transactions.user_id')
+            ->join('categories', 'categories.id', '=', 'transactions.category_id')
+            ->join('envelopes', 'envelopes.id', '=', 'transactions.envelope_id')
+            ->selectRaw('transactions.*')
+            ->selectRaw('users.name as user_name')
+            ->selectRaw('categories.name as category_name')
+            ->selectRaw("CONCAT(categories.name, ' - ', envelopes.month_year) as envelope_name")
+            ->orderBy('id', 'desc');
     }
 
     public function relationSearch(): array
@@ -48,12 +57,16 @@ final class TransactionsTable extends PowerGridComponent
             ->add('category_id')
             ->add('envelope_id')
             ->add('amount')
-            ->add('type')
+            ->add('type', function($transaction){
+                return $transaction->type === 'income' ? 'Ingreso' : 'Egreso';
+            })
             ->add('description')
             ->add('date_formatted', fn (Transactions $model) => Carbon::parse($model->date)->format('d/m/Y'))
             ->add('tags')
             ->add('receipt_path')
-            ->add('is_recurring')
+            ->add('is_recurring', function($transaction){
+                return $transaction->is_recurring === 1 ? 'Frecuente' : 'Infrecuente';
+            })
             ->add('created_at');
     }
 
@@ -61,9 +74,9 @@ final class TransactionsTable extends PowerGridComponent
     {
         return [
             Column::make('Id', 'id'),
-            Column::make('Usuario', 'user_id'),
-            Column::make('Categoría', 'category_id'),
-            Column::make('Sobre', 'envelope_id'),
+            Column::make('Usuario', 'user_name'),
+            Column::make('Categoría', 'category_name'),
+            Column::make('Sobre', 'envelope_name'),
             Column::make('Monto', 'amount')
                 ->sortable()
                 ->searchable(),
@@ -87,7 +100,7 @@ final class TransactionsTable extends PowerGridComponent
             //     ->sortable()
             //     ->searchable(),
 
-            Column::make('Recurrente', 'is_recurring')
+            Column::make('Frecuencia', 'is_recurring')
                 ->sortable()
                 ->searchable(),
 

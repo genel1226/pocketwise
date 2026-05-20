@@ -41,7 +41,9 @@ class Index extends Component
     {
         $this->state = 'update';
 
-        $this->form->edit($id);
+        $this->envelopes = $this->form->edit($id);
+
+        $this->form->show();
     }
 
     public function update()

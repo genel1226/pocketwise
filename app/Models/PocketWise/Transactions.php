@@ -2,6 +2,7 @@
 
 namespace App\Models\PocketWise;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,7 +13,18 @@ class Transactions extends Model
     /** @use HasFactory<\Database\Factories\PocketWise\TransactionsFactory> */
     use HasFactory;
 
-    protected $casts = [
-        'tags' => 'array',
-    ];
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Categories::class);
+    }
+
+    public function envelope()
+    {
+        return $this->belongsTo(Envelopes::class);
+    }
 }

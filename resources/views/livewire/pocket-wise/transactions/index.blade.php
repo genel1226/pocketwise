@@ -64,13 +64,21 @@
                             <flux:input wire:model="form.amount" type="number" label="Monto" placeholder="Ingrese Monto"
                             :error="$errors->first('amount')" />
 
-                            <flux:fieldset variant="inline">
+                            {{-- <flux:fieldset variant="inline">
                                 <flux:legend>Tipo de Transacción</flux:legend>
 
                                 <div class="flex gap-4 *:gap-x-2">
                                     <flux:checkbox wire:model="form.type" value="1" label="Marque si es Egreso" />
                                 </div>
-                            </flux:fieldset>
+                            </flux:fieldset> --}}
+
+                            <flux:radio.group wire:model="form.type" label="Tipo de Transacción" variant="segmented">
+
+                                <flux:radio value="income" label="Ingreso" />
+
+                                <flux:radio value="expense" label="Egreso" />
+
+                            </flux:radio.group>
 
                             <div class="col-span-2">
                                 <flux:textarea label="Descripción" wire:model="form.description" placeholder="Introduzca la descripción de la Transacción" />
