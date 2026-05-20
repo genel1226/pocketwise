@@ -22,4 +22,19 @@ class Envelopes extends Model
     {
         return $this->belongsTo(Categories::class);
     }
+
+    public function transactions()
+    {
+        return $this->hasMany(Transactions::class, 'envelope_id');
+    }
+
+    public function getSpentAmountAttribute()
+    {
+        return $this->transactions()->sum('amount');
+    }
+
+    public function getAvailableAttribute()
+    {
+        return $this->allocated_amount - $this->spent_amount;
+    }
 }

@@ -51,6 +51,7 @@ final class EnvelopesTable extends PowerGridComponent
             ->add('category_id')
             ->add('allocated_amount')
             ->add('spent_amount')
+            ->add('available')
             ->add('month_year')
             ->add('updated_at')
             ->add('created_at');
@@ -67,6 +68,10 @@ final class EnvelopesTable extends PowerGridComponent
                 ->searchable(),
 
             Column::make('Gastado', 'spent_amount')
+                ->sortable()
+                ->searchable(),
+
+            Column::make('Disponible', 'available')
                 ->sortable()
                 ->searchable(),
 
