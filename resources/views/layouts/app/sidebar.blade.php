@@ -5,10 +5,10 @@
     </head>
     <body class="min-h-screen bg-white dark:bg-zinc-800">
         {{-- Sidebar --}}
-        <flux:sidebar sticky collapsible="mobile" class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
+        <flux:sidebar sticky collapsible class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
             <flux:sidebar.header>
                 <x-app-logo :sidebar="true" href="{{ route('dashboard') }}" wire:navigate />
-                <flux:sidebar.collapse class="lg:hidden" />
+                <flux:sidebar.collapse class="hidden" />
             </flux:sidebar.header>
 
             <flux:sidebar.nav>
@@ -16,13 +16,13 @@
                     <flux:sidebar.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
                         Dashboard
                     </flux:sidebar.item>
-                    <flux:sidebar.item icon="tag" :href="route('categories.index')" :current="request()->routeIs('categories.*')" wire:navigate>
+                    <flux:sidebar.item icon="tag" :href="route('categorias.index')" :current="request()->routeIs('categorias.*')" wire:navigate>
                         Categorias
                     </flux:sidebar.item>
-                    <flux:sidebar.item icon="envelope" :href="route('envelopes.index')" :current="request()->routeIs('envelopes.*')" wire:navigate>
+                    <flux:sidebar.item icon="envelope" :href="route('sobres.index')" :current="request()->routeIs('sobres.*')" wire:navigate>
                         Sobres
                     </flux:sidebar.item>
-                    <flux:sidebar.item icon="banknotes" :href="route('transactions.index')" :current="request()->routeIs('transactions.*')" wire:navigate>
+                    <flux:sidebar.item icon="banknotes" :href="route('transacciones.index')" :current="request()->routeIs('transacciones.*')" wire:navigate>
                         Transacciones
                     </flux:sidebar.item>
                 </flux:sidebar.group>
@@ -33,7 +33,20 @@
 
         {{-- Header --}}
         <flux:header  class="border-b border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
-            <flux:sidebar.toggle class="lg:hidden mr-2" icon="bars-2" inset="left" />
+            <flux:sidebar.toggle class="hidden mr-2" icon="bars-2" inset="left" />
+            @php
+                $route = request()->route()->getName();
+
+                $section = explode('.', $route)[0];
+            @endphp
+
+            <flux:breadcrumbs>
+                <flux:breadcrumbs.item :href="route('dashboard')" icon="home" />
+
+                <flux:breadcrumbs.item >
+                    {{ ucfirst($section) }}
+                </flux:breadcrumbs.item>
+            </flux:breadcrumbs>
 
             <flux:spacer />
 

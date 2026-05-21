@@ -22,8 +22,8 @@ final class TransactionsTable extends PowerGridComponent
         // $this->showCheckBox();
 
         return [
-            PowerGrid::header()
-                ->showSearchInput(),
+            // PowerGrid::header()
+                // ->showSearchInput(),
             PowerGrid::footer()
                 ->showPerPage()
                 ->showRecordCount(),
@@ -34,9 +34,9 @@ final class TransactionsTable extends PowerGridComponent
     {
         // return Transactions::query()->orderBy('id', 'desc');
         return Transactions::with('user', 'category', 'envelope')
-            ->join('users', 'users.id', '=', 'transactions.user_id')
-            ->join('categories', 'categories.id', '=', 'transactions.category_id')
-            ->join('envelopes', 'envelopes.id', '=', 'transactions.envelope_id')
+            ->leftJoin('users', 'users.id', '=', 'transactions.user_id')
+            ->leftJoin('categories', 'categories.id', '=', 'transactions.category_id')
+            ->leftJoin('envelopes', 'envelopes.id', '=', 'transactions.envelope_id')
             ->selectRaw('transactions.*')
             ->selectRaw('users.name as user_name')
             ->selectRaw('categories.name as category_name')
@@ -141,7 +141,6 @@ final class TransactionsTable extends PowerGridComponent
                 ->class('pg-btn-white dark:ring-pg-primary-600 dark:border-pg-primary-600 dark:hover:bg-pg-primary-700 dark:ring-offset-pg-primary-800 dark:text-pg-primary-300 dark:bg-pg-primary-700')
                 ->dispatch('destroy', ['id' => $row->id])
                 ->tooltip('Eliminar')
-                ->confirm('Está seguro de eliminar esta Transacción?')
         ];
     }
 

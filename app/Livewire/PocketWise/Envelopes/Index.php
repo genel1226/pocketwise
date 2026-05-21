@@ -4,6 +4,7 @@ namespace App\Livewire\PocketWise\Envelopes;
 
 use App\Livewire\Forms\EnvelopesForm;
 use App\Models\PocketWise\Categories;
+use Flux\Flux;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -14,6 +15,8 @@ class Index extends Component
     public $state = 'create';
 
     public $category_id = '';
+
+    public ?int $idDestroy = null;
 
     public function open()
     {
@@ -29,13 +32,13 @@ class Index extends Component
         $this->dispatch('pg:eventRefresh-envelopesTable');
     }
 
-    public function updatedCategoryId($value)
+    public function updatedCategoryId(int $value)
     {
         $this->form->updatedCategoryId($value);
     }
 
     #[On('edit')]
-    public function edit($id)
+    public function edit(int $id)
     {
         $this->state = 'update';
 
@@ -50,11 +53,22 @@ class Index extends Component
     }
 
     #[On('destroy')]
-    public function destroy($id)
+    public function destroy(int $id)
     {
-        $this->form->destroy($id);
+        $this->idDestroy = $id;
+
+        Flux::modal('delete-envelope')->show();
+    }
+
+    public function confirmDestroy()
+    {
+        $this->form->destroy($this->idDestroy);
+
+        Flux::modal('delete-envelope')->close();
 
         $this->dispatch('pg:eventRefresh-envelopesTable');
+
+        $this->idDestroy = null;
     }
 
     public function exit()

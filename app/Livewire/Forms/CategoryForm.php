@@ -12,23 +12,23 @@ class CategoryForm extends Form
 {
     public ?Categories $category = null;
 
-    public $user_id;
+    public int $user_id;
 
     #[Validate('required|min:3')]
-    public $name;
+    public ?string $name;
 
     #[Validate('required')]
-    public $type = null;
+    public ?string $type = null;
 
-    public $is_fixed = false;
-    public $fixed = 0;
+    public bool $is_fixed = false;
+    public int $fixed = 0;
 
     #[Validate('required|numeric|min:1')]
-    public $monthly_budget = 0;
+    public int $monthly_budget = 0;
 
-    public $icon = null;
+    public ?string $icon = null;
 
-    public $color = '#000000';
+    public string $color = '#000000';
 
     public function save()
     {
@@ -64,7 +64,7 @@ class CategoryForm extends Form
         Flux::modal('create-categories')->close();
     }
 
-    public function edit($id)
+    public function edit(int $id)
     {
         $this->category = Categories::findOrFail($id);
 
@@ -83,7 +83,7 @@ class CategoryForm extends Form
     {
         $this->validate();
 
-        $this->category->update([
+        Categories::findOrFail($this->category->id)->update([
             'name' => $this->name,
             'type' => $this->type,
             'is_fixed' => $this->is_fixed,
@@ -92,10 +92,19 @@ class CategoryForm extends Form
             'color' => $this->color,
         ]);
 
+        // $this->category->update([
+        //     'name' => $this->name,
+        //     'type' => $this->type,
+        //     'is_fixed' => $this->is_fixed,
+        //     'monthly_budget' => $this->monthly_budget,
+        //     'icon' => $this->icon,
+        //     'color' => $this->color,
+        // ]);
+
         Flux::modal('create-categories')->close();
     }
 
-    public function destroy($id)
+    public function destroy(int $id)
     {
         Categories::findOrFail($id)->delete();
     }

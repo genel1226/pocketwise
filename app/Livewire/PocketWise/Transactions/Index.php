@@ -5,6 +5,7 @@ namespace App\Livewire\PocketWise\Transactions;
 use App\Livewire\Forms\TransactionForm;
 use App\Models\PocketWise\Categories;
 use App\Models\PocketWise\Envelopes;
+use Flux\Flux;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -14,9 +15,11 @@ class Index extends Component
 
     public $state = 'create';
 
+    public ?int $idDestroy = null;
+
     public $envelopes = [];
 
-    public function updatedFormCategoryId($value)
+    public function updatedFormCategoryId(int $value)
     {
         $this->envelopes = $this->form->updatedFormCategoryId($value);
         // dd($this->envelopes);
@@ -37,7 +40,7 @@ class Index extends Component
     }
 
     #[On('edit')]
-    public function edit($id)
+    public function edit(int $id)
     {
         $this->state = 'update';
 
@@ -54,11 +57,22 @@ class Index extends Component
     }
 
     #[On('destroy')]
-    public function destroy($id)
+    public function destroy(int $id)
     {
-        $this->form->destroy($id);
+        $this->idDestroy = $id;
+
+        Flux::modal('delete-transaction')->show();
+    }
+
+    public function confirmDestroy()
+    {
+        $this->form->destroy($this->idDestroy);
+
+        Flux::modal('delete-transaction')->close();
 
         $this->dispatch('pg:eventRefresh-transactionsTable');
+        
+        $this->idDestroy = null;
     }
 
     public function exit()

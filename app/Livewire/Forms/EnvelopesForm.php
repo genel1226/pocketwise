@@ -13,20 +13,20 @@ class EnvelopesForm extends Form
 {
     public ?Envelopes $envelopes;
 
-    public $user_id;
+    public ?int $user_id;
 
-    public $category_id;
+    public ?int $category_id;
 
-    public $allocated_amount = '';
+    public ?float $allocated_amount;
 
-    public $spent_amount = 0;
+    public ?float $spent_amount = 0;
 
     #[Validate('required')]
-    public $month_year;
+    public ?string $month_year;
 
-    public function updatedCategoryId($value)
+    public function updatedCategoryId(int $value)
     {
-        $category = Categories::find($value);
+        $category = Categories::findOrFail($value);
 
         $this->allocated_amount = $category?->monthly_budget;
     }
@@ -74,7 +74,7 @@ class EnvelopesForm extends Form
         $this->exit();
     }
 
-    public function edit($id)
+    public function edit(int $id)
     {
         $this->envelopes = Envelopes::findOrFail($id); 
         
@@ -90,18 +90,25 @@ class EnvelopesForm extends Form
     {
         $this->validate();
 
-        $this->envelopes->update([
+        Envelopes::findOrFail($this->envelopes->id)->update([
             'category_id' => $this->category_id,
             'allocated_amount' => $this->allocated_amount,
             'spent_amount' => $this->spent_amount,
             'month_year' => $this->month_year,
-            ]
-        );
+        ]);
+
+        // $this->envelopes->update([
+        //     'category_id' => $this->category_id,
+        //     'allocated_amount' => $this->allocated_amount,
+        //     'spent_amount' => $this->spent_amount,
+        //     'month_year' => $this->month_year,
+        //     ]
+        // );
 
         $this->exit();
     }
 
-    public function destroy($id)
+    public function destroy(int $id)
     {
         Envelopes::findOrFail($id)->delete();
     }

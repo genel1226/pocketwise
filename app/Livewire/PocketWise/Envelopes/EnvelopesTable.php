@@ -31,8 +31,8 @@ final class EnvelopesTable extends PowerGridComponent
     public function datasource(): Builder
     {
         return Envelopes::with('user','category')
-            ->join('users', 'users.id', '=', 'envelopes.user_id')
-            ->join('categories', 'categories.id', '=', 'envelopes.category_id')
+            ->leftJoin('users', 'users.id', '=', 'envelopes.user_id')
+            ->leftJoin('categories', 'categories.id', '=', 'envelopes.category_id')
             ->selectRaw('envelopes.*, users.name as user_name')
             ->selectRaw('envelopes.*, categories.name as category_name')
             ->orderBy('id','desc');
@@ -52,6 +52,11 @@ final class EnvelopesTable extends PowerGridComponent
             ->add('allocated_amount')
             ->add('spent_amount')
             ->add('available')
+            ->add('status', function ($envelope) {
+                    return $envelope->available <= 0
+                        ? '🔴 Agotado'
+                        : '🟢 Disponible';
+                })
             ->add('month_year')
             ->add('updated_at')
             ->add('created_at');
@@ -67,13 +72,11 @@ final class EnvelopesTable extends PowerGridComponent
                 ->sortable()
                 ->searchable(),
 
-            Column::make('Gastado', 'spent_amount')
-                ->sortable()
-                ->searchable(),
+            Column::make('Gastado', 'spent_amount'),
 
-            Column::make('Disponible', 'available')
-                ->sortable()
-                ->searchable(),
+            Column::make('Disponible', 'available'),
+
+            Column::make('Estado', 'status'),
 
             Column::make('Año - Mes', 'month_year')
                 ->sortable()
@@ -115,7 +118,6 @@ final class EnvelopesTable extends PowerGridComponent
                 ->class('pg-btn-white dark:ring-pg-primary-600 dark:border-pg-primary-600 dark:hover:bg-pg-primary-700 dark:ring-offset-pg-primary-800 dark:text-pg-primary-300 dark:bg-pg-primary-700')
                 ->dispatch('destroy', ['id' => $row->id])
                 ->tooltip('Eliminar')
-                ->confirm('Está seguro de eliminar este Sobre?')
         ];
     }
 

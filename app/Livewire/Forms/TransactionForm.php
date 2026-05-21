@@ -13,38 +13,38 @@ use Livewire\Form;
 
 class TransactionForm extends Form
 {
-    public $user_id;
+    public ?int $user_id;
 
     #[Validate('required')]
-    public $category_id;
+    public ?int $category_id;
 
-    public $envelope_id;
+    public ?int $envelope_id = null;
 
     #[Validate('required|numeric|min:1')]
-    public $amount;
+    public ?float $amount;
 
     #[Validate('required')]
-    public $type;
+    public ?string $type;
 
-    public $description;
-
-    #[Validate('required')]
-    public $years;
+    public ?string $description = null;
 
     #[Validate('required')]
-    public $months;
+    public ?string $years;
 
     #[Validate('required')]
-    public $days;
+    public ?string $months = null;
+
+    #[Validate('required')]
+    public ?string $days;
 
     #[Validate('required|date')]
-    public $date;
+    public ?string $date;
 
-    public $tags;
+    public ?string $tags;
 
-    public $receipt_path;
+    public ?string $receipt_path;
 
-    public $is_recurring;
+    public ?int $is_recurring;
 
     public $envelopes = [];
 
@@ -74,7 +74,7 @@ class TransactionForm extends Form
         $this->show();
     }
 
-    public function updatedFormCategoryId($value)
+    public function updatedFormCategoryId(int $value)
     {
         return Envelopes::with('category')
             ->where('category_id', $value)
@@ -104,10 +104,12 @@ class TransactionForm extends Form
             'date' => $this->date,
         ]);
 
+        Flux::toast('Your changes have been saved.');
+
         $this->exit();
     }
 
-    public function edit($id)
+    public function edit(int $id)
     {
         // $this->refresh();
 
@@ -159,21 +161,33 @@ class TransactionForm extends Form
         $this->date = $this->years.'-'.$this->months.'-'.$this->days;
 
         $this->validate();
+
+        Transactions::findOrFail($this->transaction->id)->update(
+            [
+                'category_id' => $this->category_id,
+                'envelope_id' => $this->envelope_id,
+                'amount' => $this->amount,
+                'type' => $this->type,
+                'description' => $this->description,
+                'date' => $this->date,
+                'is_recurring' => $this->is_recurring,
+            ]
+        );
         
-        $this->transaction->update([
-            'category_id' => $this->category_id,
-            'envelope_id' => $this->envelope_id,
-            'amount' => $this->amount,
-            'type' => $this->type,
-            'description' => $this->description,
-            'date' => $this->date,
-            'is_recurring' => $this->is_recurring,
-        ]);
+        // $this->transaction->update([
+        //     'category_id' => $this->category_id,
+        //     'envelope_id' => $this->envelope_id,
+        //     'amount' => $this->amount,
+        //     'type' => $this->type,
+        //     'description' => $this->description,
+        //     'date' => $this->date,
+        //     'is_recurring' => $this->is_recurring,
+        // ]);
 
         $this->exit();
     }
 
-    public function destroy($id)
+    public function destroy(int $id)
     {
         Transactions::findOrFail($id)->delete();
     }
@@ -188,5 +202,6 @@ class TransactionForm extends Form
         $this->refresh();
 
         Flux::modal('create-transactions')->close();
+        Flux::modal('delete-transaction')->close();
     }
 }

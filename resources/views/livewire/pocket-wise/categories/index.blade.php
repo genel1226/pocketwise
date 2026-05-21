@@ -1,4 +1,28 @@
 <div>
+    {{-- Modal Confirmacion Eliminar --}}
+    <flux:modal name="delete-category" class="min-w-[22rem]">
+        <div class="space-y-6">
+            <div>
+                <flux:heading size="lg">¿Eliminar Categoría?</flux:heading>
+
+                <flux:text class="mt-2">
+                    Está a punto de elimiar esta Categoría.<br>
+                    Esta acción no se puede revertir.
+                </flux:text>
+            </div>
+
+            <div class="flex gap-2">
+                <flux:spacer />
+
+                <flux:modal.close>
+                    <flux:button variant="ghost">Cancelar</flux:button>
+                </flux:modal.close>
+
+                <flux:button type="button" wire:click="confirmDestroy" variant="danger">Borrar Categoría</flux:button>
+            </div>
+        </div>
+    </flux:modal>
+
     {{-- Titulo y Boton Modal para agregar --}}
     <div class="flex justify-between py-4 bg-zinc-100 dark:bg-zinc-900 rounded-2xl">
         <div class="order-first">

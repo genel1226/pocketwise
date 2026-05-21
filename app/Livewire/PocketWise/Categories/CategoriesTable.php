@@ -49,7 +49,7 @@ final class CategoriesTable extends PowerGridComponent
                     WHEN 1 THEN 'Fijo'
                 END as is_fixed_label
             ")
-            ->join('users', 'users.id', '=', 'categories.user_id')
+            ->leftJoin('users', 'users.id', '=', 'categories.user_id')
             ->selectRaw('categories.*, users.name as user_name')
             ->orderBy('id','desc');
     }
@@ -137,8 +137,7 @@ final class CategoriesTable extends PowerGridComponent
                 ->slot(Blade::render('<x-heroicon-s-trash class="w-3 h-3" />'))
                 ->class('pg-btn-white dark:ring-pg-primary-600 dark:border-pg-primary-600 dark:hover:bg-pg-primary-700 dark:ring-offset-pg-primary-800 dark:text-pg-primary-300 dark:bg-pg-primary-700')
                 ->dispatch('destroy', ['id' => $row->id])
-                ->tooltip('Eliminar')
-                ->confirm('Está seguro de elimiar esta Categoría?'),
+                ->tooltip('Eliminar'),
         ];
     }
 

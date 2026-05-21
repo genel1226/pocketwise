@@ -11,8 +11,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('dashboard', 'dashboard')->name('dashboard');
 });
 
-Route::livewire('categories', IndexCategories::class)->name('categories.index');
-Route::livewire('envelopes', IndexEnvelopes::class)->name('envelopes.index');
-Route::livewire('transactions', IndexTransactions::class)->name('transactions.index');
+Route::livewire('categories', IndexCategories::class)->name('categorias.index');
+Route::livewire('envelopes', IndexEnvelopes::class)->name('sobres.index');
+Route::livewire('transactions', IndexTransactions::class)->name('transacciones.index');
 
 require __DIR__.'/settings.php';
