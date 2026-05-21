@@ -40,6 +40,16 @@ class EnvelopesForm extends Form
     {
         $this->refresh();
 
+        if (Categories::count('id') === 0) {
+
+            session()->flash(
+                'error',
+                'Debe crear una categoría primero.'
+            );
+
+            return;
+        }
+
         $this->show();
     }
 

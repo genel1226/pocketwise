@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Forms;
 
+use App\Models\PocketWise\Categories;
 use App\Models\PocketWise\Envelopes;
 use App\Models\PocketWise\Transactions;
 use Carbon\Carbon;
@@ -59,6 +60,17 @@ class TransactionForm extends Form
     public function open()
     {
         $this->refresh();
+
+        if (Categories::count('id') === 0) {
+
+            session()->flash(
+                'error',
+                'Debe crear una categoría primero.'
+            );
+
+            return;
+        }
+        
         $this->show();
     }
 

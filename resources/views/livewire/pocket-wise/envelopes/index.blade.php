@@ -1,4 +1,9 @@
 <div>
+    @if (session()->has('error'))
+        <div class="mb-4 rounded-xl bg-red-100 text-red-700 p-3">
+            {{ session('error') }}
+        </div>
+    @endif
     {{-- Titulo y Boton Modal para agregar --}}
     <div class="flex justify-between py-4 bg-zinc-100 dark:bg-zinc-900 rounded-2xl">
         <div class="order-first">
